@@ -46,7 +46,18 @@ Comme pour les messages prédéfinis, il s'affichera 3 secondes toutes les 3 sec
 ![Rendu de l'exemple](https://i.ibb.co/Bgcvm1X/Capture-d-cran-2024-07-25-205341.png)  
 
 
-Voici une vidéo tutoriel du fonctionnement du plugin : https://www.youtube.com/watch?v=YBw51OSemRE
+Voici une vidéo tutoriel du fonctionnement du plugin (V1.1) : https://www.youtube.com/watch?v=YBw51OSemRE  
+
+## 🔹Ajouts de la mise à jour 1.2
+### :small_orange_diamond:Modification de la durée d'affichage et de l'intervalle entre chaque affichage
+Il est désormais possible, en tant qu'admin de niveau 5, d'ouvrir un menu permettant la modification du temps d'affichage des girouettes.  
+
+### :small_orange_diamond:Sauvegarde des girouettes personnalisées
+Vous pouvez sauvegarder vos girouettes personnalisées !  
+Dans la sélection "Autre", un message s'affiche désormais pour vous demandez si vous souhaitez le sauvegarder pour plus tard.
+
+### :small_orange_diamond:Suppression des girouettes
+La création implique la suppression. Vous pouvez, en tant que propriétaire d'une entreprise de bus, supprimer les destinations de vos bus, même les prédéfinies !  
 
 ## 🔸Conditions et limites
 Vous pouvez utiliser, modifier et personnaliser le plugin à votre guise !  
