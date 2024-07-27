@@ -61,7 +61,7 @@ namespace Destination_Addons
 
         public DestinationAddons(IGameAPI api) : base(api) // Constructeur
         {
-            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2", "IceCubeFr");
+            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2.1", "IceCubeFr");
         }
 
 
@@ -119,7 +119,6 @@ namespace Destination_Addons
                 }
                 else
                 {
-                    destListSaved = destList;
                     string filePath = Path.Combine(directoryPath, persodest);
                     string json = JsonConvert.SerializeObject(destListSaved, Formatting.Indented);
                     File.WriteAllText(filePath, json);
