@@ -1,3 +1,4 @@
+# ⚠️ Ce plugin ne sera plus mis à jour. Il est fonctionnel mais incomplet. Vous êtes libres de récupérer le code et de l'améliorer à votre guise. Nous n'effectons plus d'assistance sur ce plugin ⚠️
 ![Bannière Destionation Addons](https://i.ibb.co/7VQbs7t/Ajouter-un-sous-titre.png)
 # 🔹Destination Addons
 Ajoutez du dynamisme à vos girouettes de bus NovaLife ! 🚌
@@ -61,4 +62,4 @@ La création implique la suppression. Vous pouvez, en tant que propriétaire d'u
 
 ## 🔸Conditions et limites
 Vous pouvez utiliser, modifier et personnaliser le plugin à votre guise !  
-**⚠️ Aucune assistance ne sera fournie à un plugin modifié ⚠️**
+**⚠️ Nous n'effectuons plus d'assistance sur ce plugin ⚠️**
