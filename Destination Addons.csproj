@@ -72,6 +72,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>xcopy /Y "$(TargetDir)Destination Addons.dll" "C:\Program Files (x86)\Steam\steamapps\common\Nova-Life\Servers\Tests map vierge\Plugins"</PostBuildEvent>
+    <PostBuildEvent>xcopy /Y "$(TargetDir)Destination Addons.dll" "D:\SteamLibrary\steamapps\common\Nova-Life\Servers\Tests map vierge\Plugins"</PostBuildEvent>
   </PropertyGroup>
 </Project>

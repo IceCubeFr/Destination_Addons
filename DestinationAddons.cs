@@ -5,7 +5,6 @@ using Life.UI;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
-using System.Collections.Specialized;
 using System.Linq;
 using Life.VehicleSystem;
 using ModKit.Helper;
@@ -14,7 +13,7 @@ using _menu = AAMenu.Menu;
 using Life.BizSystem;
 using System.IO;
 using Newtonsoft.Json;
-using System.Diagnostics.Eventing.Reader;
+using Logger = ModKit.Internal.Logger;
 
 namespace Destination_Addons
 {
@@ -26,8 +25,7 @@ namespace Destination_Addons
 
         // Initialisation des variables utilisées
         public int intervalle = 3;
-        public int duration = 3;
-        string destSelect = "";
+        public Dictionary<Vehicle, string[]> vehicles = new Dictionary<Vehicle, string[]>();
         public List<string> destListSaved = new List<string>()
         {
             "Déviation sur votre ligne",
@@ -42,13 +40,9 @@ namespace Destination_Addons
 
         public void SaveTimeJson()
         {
-            List<int> info = new List<int>
-                        {
-                            duration,
-                            intervalle
-                        };
+            int interval = intervalle;
             string jsonFile = Directory.GetFiles(directoryPath, timeconfig).FirstOrDefault();
-            string updatedJson = JsonConvert.SerializeObject(info, Formatting.Indented);
+            string updatedJson = JsonConvert.SerializeObject(intervalle, Formatting.Indented);
             File.WriteAllText(jsonFile, updatedJson);
         }
 
@@ -61,7 +55,7 @@ namespace Destination_Addons
 
         public DestinationAddons(IGameAPI api) : base(api) // Constructeur
         {
-            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2.1", "IceCubeFr");
+            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2.2", "IceCubeFr");
         }
 
 
@@ -81,18 +75,13 @@ namespace Destination_Addons
                 if (jsonFile != null)
                 {
                     string json = File.ReadAllText(jsonFile);
-                    List<int> setup = JsonConvert.DeserializeObject<List<int>>(json);
-                    duration = setup[0];
-                    intervalle = setup[1];
+                    int setup = JsonConvert.DeserializeObject<int>(json);
+                    intervalle = setup;
                     SaveTimeJson();
                 }
                 else
                 {
-                    List<int> info = new List<int>
-                        {
-                            duration,
-                            intervalle
-                        };
+                    int info = intervalle;
                     string filePath = Path.Combine(directoryPath, timeconfig);
                     string json = JsonConvert.SerializeObject(info, Formatting.Indented);
                     File.WriteAllText(filePath, json);
@@ -156,10 +145,10 @@ namespace Destination_Addons
                 Player player = PanelHelper.ReturnPlayerFromPanel(ui);
                 Panel(player);
             });
-            _menu.AddAdminTabLine(PluginInformations, 5, "Paramètres Destination Addons", (ui) =>
+            _menu.AddAdminTabLine(PluginInformations, 5, "Destination Addons", (ui) =>
             {
                 Player player = PanelHelper.ReturnPlayerFromPanel(ui);
-                AdminMenu(player);
+                EditIntervalle(player);
             });
         }
 
@@ -168,26 +157,23 @@ namespace Destination_Addons
             return !destList.Contains(veh.bus.girouetteText);
         }
 
-        public IEnumerator DestUpdate(Vehicle vehicule)
+        public IEnumerator DestUpdate()
         {
-            string dest = vehicule.bus.girouetteText;
-            int id = 0;
-            int time = intervalle;
             while (true)
             {
-                if (id == 0)
+                foreach (Vehicle vehicule in vehicles.Keys)
                 {
-                    vehicule.bus.NetworkgirouetteText = dest;
-                    id = 1;
-                    time = intervalle;
+                    if (destList.Contains(vehicule.bus.girouetteText))
+                    {
+                        vehicule.bus.NetworkgirouetteText = vehicles[vehicule][0];
+                        
+                    }
+                    else
+                    {
+                        vehicule.bus.NetworkgirouetteText = vehicles[vehicule][1];
+                    }
                 }
-                else
-                {
-                    vehicule.bus.NetworkgirouetteText = destSelect;
-                    id = 0;
-                    time = duration;
-                }
-                yield return new WaitForSeconds(time);
+                yield return new WaitForSeconds(intervalle);
             }
             
         }
@@ -196,15 +182,16 @@ namespace Destination_Addons
         {
             if (IsDestValid(veh))
             {
-                if (!destList.Contains(girouette)) { destList.Add(girouette); }
                 player.setup.StopAllCoroutines();
-                destSelect = girouette;
-                player.setup.StartCoroutine(DestUpdate(veh));
+                if (!destList.Contains(girouette)) { destList.Add(girouette); }
+                if (!vehicles.ContainsKey((veh))) { vehicles.Add(veh, new String[2]); ;}
+                vehicles[(veh)] = new String[] {veh.bus.girouetteText, girouette};
+                player.setup.StartCoroutine(DestUpdate());
                 player.Notify("Destination ajoutée", "La destination a été ajoutée", NotificationManager.Type.Success);
             }
             else
             {
-                player.Notify("Attention", "Veuillez réessayer dans 3 secondes");
+                player.Notify("Attention", $"Veuillez réessayer dans {intervalle} secondes");
             }
         }
 
@@ -237,7 +224,7 @@ namespace Destination_Addons
                 }
                 else
                 {
-                    player.Notify("Attention", "Veuillez réessayer dans 3 secondes");
+                    player.Notify("Attention", $"Veuillez réessayer dans {intervalle} secondes");
                 }
 
             });
@@ -249,13 +236,14 @@ namespace Destination_Addons
             save.Display();
         }
 
-        public void AjoutAutres(Player player, Vehicle vehicle, string text)
+        public void AjoutAutres(Player player, Vehicle veh, string text)
         {
-            if (IsDestValid(vehicle))
+            if (IsDestValid(veh))
             {
                 player.setup.StopAllCoroutines();
-                destSelect = text;
-                player.setup.StartCoroutine(DestUpdate(vehicle));
+                if (!vehicles.ContainsKey((veh))) { vehicles.Add(veh, new String[2]); ;}
+                vehicles[(veh)] = new String[] {veh.bus.girouetteText, text};
+                player.setup.StartCoroutine(DestUpdate());
                 if (!destList.Contains(text))
                 {
                     destList.Add(text);
@@ -264,7 +252,7 @@ namespace Destination_Addons
             }
             else
             {
-                player.Notify("Attention", "Veuillez réessayer dans 3 secondes");
+                player.Notify("Attention", $"Veuillez réessayer dans {intervalle} secondes");
             }
         }
 
@@ -321,12 +309,16 @@ namespace Destination_Addons
                 {
                     if (IsDestValid(veh))
                     {
-                        player.setup.StopAllCoroutines();
+                        vehicles.Remove(veh);
+                        if (vehicles.Count == 0) 
+                        {
+                            player.setup.StopAllCoroutines();
+                        }
                         player.Notify("Destination supprimée", "La destination supplémentaire a bien été retirée", NotificationManager.Type.Success);
                     }
                     else
                     {
-                        player.Notify("Attention", "Veuillez réessayer dans 3 secondes");
+                        player.Notify("Attention", $"Veuillez réessayer dans {intervalle} secondes");
                     }
                 });
                 foreach (string destination in destListSaved)
@@ -363,47 +355,16 @@ namespace Destination_Addons
                 {
                     intervalle = interval;
                     SaveTimeJson();
-                    AdminMenu(player);
+                    player.ClosePanel(iedit);
                     player.Notify("Success", "Intervalle modifiée avec succès !", NotificationManager.Type.Success);
                 }
                 else
                 {
+                    EditIntervalle(player);
                     player.Notify("Erreur", "Veuillez renseigner un nombre entier positif", NotificationManager.Type.Error);
                 }
             });
             iedit.Display();
-        }
-
-        public void EditDuration(Player player)
-        {
-            Panel dedit = PanelHelper.Create("Modifier Intervalle", UIPanel.PanelType.Input, player, () => EditDuration(player));
-            dedit.SetInputPlaceholder($"Temps actuel : {duration} secondes");
-            dedit.PreviousButton();
-            dedit.AddButton("Valider", ui =>
-            {
-                if (int.TryParse(dedit.inputText, out int time) && time > 0)
-                {
-                    duration = time;
-                    SaveTimeJson();
-                    AdminMenu(player);
-                    player.Notify("Success", "Durée modifiée avec succès !", NotificationManager.Type.Success);
-                }
-                else
-                {
-                    player.Notify("Erreur", "Veuillez renseigner un nombre entier positif", NotificationManager.Type.Error);
-                }
-            });
-            dedit.Display();
-        }
-
-        public void AdminMenu(Player player)
-        {
-            Panel adminpanel = PanelHelper.Create("Gestion Admin", UIPanel.PanelType.Tab, player, () => AdminMenu(player));
-            adminpanel.AddTabLine("Modifier intervalle", ui => EditIntervalle(player));
-            adminpanel.AddTabLine("Modifier durée d'affichage", ui => EditDuration(player));
-            adminpanel.CloseButton();
-            adminpanel.AddButton("Valider", ui =>  adminpanel.SelectTab());
-            adminpanel.Display();
         }
 
         public void InitDirectory()
