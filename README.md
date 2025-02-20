@@ -14,7 +14,7 @@ La bise
 Ajoutez du dynamisme à vos girouettes de bus NovaLife ! :bus:
 
 ## :small_orange_diamond:Dépendances
-Pour utiliser le plugin, vous devrez être muni de la [dernière version de ModKit](https://github.com/Aarnow/NovaLife_ModKit-Releases/releases/tag/v0.0.9) ainsi que de ses dépendances.  
+Pour utiliser le plugin, vous devrez être muni de la [dernière version de ModKit](https://github.com/Aarnow/NovaLife_ModKit-Releases/releases/) ainsi que de ses dépendances.  
 
 ## :small_orange_diamond:Fonctionnement
 Chauffeur dans une entreprise de bus, vous pouvez accéder au menu principal via la commande /destination (aussi /dest) ou via le menu ModKit catégorie Métier.  
