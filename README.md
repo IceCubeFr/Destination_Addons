@@ -1,3 +1,4 @@
+![GitHub Downloads (all assets, all releases)](https://img.shields.io/github/downloads/IceCubeFr/Destination_Addons/total?style=for-the-badge&labelColor=T%C3%A9l%C3%A9chargements&link=https%3A%2F%2Fgithub.com%2FIceCubeFr%2FDestination_Addons)
 ## Message du dev
 ### Plugin open-source
 Hello hello  
