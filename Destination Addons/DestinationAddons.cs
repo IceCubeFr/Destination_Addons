@@ -54,7 +54,7 @@ namespace Destination_Addons
 
         public DestinationAddons(IGameAPI api) : base(api) // Constructeur
         {
-            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2.2", "IceCubeFr");
+            PluginInformations = new PluginInformations(AssemblyHelper.GetName(), "1.2.3", "IceCubeFr");
         }
 
 
