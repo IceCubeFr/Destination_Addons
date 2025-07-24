@@ -9,6 +9,7 @@ Je ne ferai plus d'ajouts dessus, comme pour NearbyShare, mais je ferai au mieux
 La mise à jour 1.2.3 du plugin s'adapte à la version 1.63.4 de NovaLife ;)  
 Le code est libre d'accès, n'hésitez pas à l'améliorer si vous le souhaitez  
 La bise  
+_Update 1.65 : Le plugin fonctionne parfaitement ! Bon jeu !_
 
 --------------------------------------------------------------------------------------------------------
 
